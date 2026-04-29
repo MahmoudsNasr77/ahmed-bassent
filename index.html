@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ahmed-Bassent</title>
+  
+  <!-- ✅ Favicon: Gold star on dark background -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231c160e'/%3E%3Ctext x='16' y='21' text-anchor='middle' fill='%23d4a93a' font-family='serif' font-size='18'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E" />
+  
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
@@ -27,9 +30,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     
     /* Slower, smoother scroll */
-    html { 
-      scroll-behavior: auto; /* Disable default smooth for custom control */
-    }
+    html { scroll-behavior: auto; }
 
     body {
       font-family: 'Cairo', sans-serif;
@@ -53,9 +54,7 @@
       opacity: 0;
       transition: opacity 0.5s ease;
     }
-    #fireworks-canvas.active {
-      opacity: 1;
-    }
+    #fireworks-canvas.active { opacity: 1; }
 
     /* ============================
        HERO
@@ -252,6 +251,7 @@
       gap: 8px;
       opacity: 0;
       animation: rise 1s 2s ease forwards;
+      cursor: pointer;
     }
     .hero-scroll .scroll-track {
       width: 1px;
@@ -628,15 +628,19 @@
       .wish-item { padding: 24px 20px; }
     }
 
-    /* Change cursor globally */
-body {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="%23d4a93a" opacity="0.3"/><circle cx="16" cy="16" r="6" fill="%23b8922a"/></svg>') 16 16, auto;
-}
-
-/* Different cursors for interactive elements */
-a, button, .hero-scroll, .wish-item {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="%23d4788a" opacity="0.4"/><text x="16" y="20" text-anchor="middle" fill="%23b8922a" font-size="16">✦</text></svg>') 16 16, pointer;
-}
+    /* ============================
+       CUSTOM CURSOR
+    ============================ */
+    body {
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="%23d4a93a" opacity="0.3"/><circle cx="16" cy="16" r="6" fill="%23b8922a"/></svg>') 16 16, auto;
+    }
+    a, button, .hero-scroll, .wish-item, .count-unit {
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="%23d4788a" opacity="0.4"/><text x="16" y="20" text-anchor="middle" fill="%23b8922a" font-size="16">✦</text></svg>') 16 16, pointer;
+    }
+    @media (max-width: 768px) {
+      body { cursor: auto; }
+      a, button, .hero-scroll, .wish-item { cursor: pointer; }
+    }
   </style>
 </head>
 <body>
@@ -764,220 +768,198 @@ a, button, .hero-scroll, .wish-item {
   </footer>
 
   <script>
-    /* ── OPTIMIZED FIREWORKS (High Performance) ── */
-    /* ── LOOPING FIREWORKS SYSTEM ── */
-
-class Firework {
-  constructor(x, targetY, color) {
-    this.x = x;
-    this.y = window.innerHeight;
-    this.targetY = targetY;
-    this.speed = 10 + Math.random() * 3;
-
-    const angle = Math.atan2(targetY - this.y, 0);
-    this.vx = 0;
-    this.vy = Math.sin(angle) * this.speed;
-
-    this.color = color;
-    this.exploded = false;
-    this.particles = [];
-    this.gravity = 0.04;
-  }
-
-  update() {
-    if (!this.exploded) {
-      this.y += this.vy;
-      this.vy += this.gravity;
-
-      if (this.y <= this.targetY || this.vy >= 0) {
-        this.explode();
+    /* ── FIXED FIREWORKS SYSTEM (Glitch-Free) ── */
+    class Firework {
+      constructor(x, targetY, color) {
+        this.x = x;
+        this.y = window.innerHeight;
+        this.targetY = targetY;
+        this.speed = 10 + Math.random() * 3;
+        
+        // ✅ FIX #1: Proper vertical launch with tiny horizontal drift
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = -Math.abs(this.speed);
+        
+        this.color = color;
+        this.exploded = false;
+        this.particles = [];
+        this.gravity = 0.04;
       }
-    } else {
-      for (let i = this.particles.length - 1; i >= 0; i--) {
-        this.particles[i].update();
-        if (this.particles[i].alpha <= 0) {
-          this.particles.splice(i, 1);
+
+      update() {
+        if (!this.exploded) {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.vy += this.gravity;
+          
+          if (this.y <= this.targetY || this.vy >= 0) {
+            this.explode();
+          }
+        } else {
+          // ✅ FIX #3: Clean up particles when nearly invisible
+          for (let i = this.particles.length - 1; i >= 0; i--) {
+            this.particles[i].update();
+            if (this.particles[i].alpha <= 0.02) {
+              this.particles.splice(i, 1);
+            }
+          }
         }
       }
-    }
-  }
 
-  explode() {
-    this.exploded = true;
+      explode() {
+        this.exploded = true;
+        const count = 60;
+        const colors = ['#d4a93a', '#f2d4db', '#c8ddd3', '#ffffff'];
 
-    const count = 60;
-    const colors = ['#d4a93a', '#f2d4db', '#c8ddd3', '#ffffff'];
+        for (let i = 0; i < count; i++) {
+          const angle = (Math.PI * 2 / count) * i;
+          const speed = 2 + Math.random() * 3;
+          this.particles.push(new Particle(
+            this.x, this.y, angle, speed, 2,
+            colors[Math.floor(Math.random() * colors.length)]
+          ));
+        }
+      }
 
-    for (let i = 0; i < count; i++) {
-      const angle = (Math.PI * 2 / count) * i;
-      const speed = 2 + Math.random() * 3;
+      draw(ctx) {
+        if (!this.exploded) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        } else {
+          this.particles.forEach(p => p.draw(ctx));
+        }
+      }
 
-      this.particles.push(new Particle(
-        this.x,
-        this.y,
-        angle,
-        speed,
-        2,
-        colors[Math.floor(Math.random() * colors.length)]
-      ));
-    }
-  }
-
-  draw(ctx) {
-    if (!this.exploded) {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
-      ctx.fillStyle = this.color;
-      ctx.fill();
-    } else {
-      this.particles.forEach(p => p.draw(ctx));
-    }
-  }
-
-  isDone() {
-    return this.exploded && this.particles.length === 0;
-  }
-}
-
-class Particle {
-  constructor(x, y, angle, speed, size, color) {
-    this.x = x;
-    this.y = y;
-    this.vx = Math.cos(angle) * speed;
-    this.vy = Math.sin(angle) * speed;
-    this.size = size;
-    this.color = color;
-    this.alpha = 1;
-    this.decay = 0.02;
-    this.gravity = 0.03;
-    this.friction = 0.98;
-  }
-
-  update() {
-    this.vx *= this.friction;
-    this.vy *= this.friction;
-    this.vy += this.gravity;
-
-    this.x += this.vx;
-    this.y += this.vy;
-
-    this.alpha -= this.decay;
-  }
-
-  draw(ctx) {
-    ctx.globalAlpha = this.alpha;
-    ctx.fillStyle = this.color;
-
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.globalAlpha = 1;
-  }
-}
-
-class FireworksSystem {
-  constructor(canvas) {
-    this.canvas = canvas;
-    this.ctx = canvas.getContext('2d');
-    this.fireworks = [];
-
-    this.lastLaunch = 0;
-    this.launchInterval = 700; // control speed
-    this.maxFireworks = 2;     // control density
-
-    this.running = true;
-  }
-
-
-  launch(x, y) {
-  const colors = ['#d4a93a', '#f2d4db', '#c8ddd3', '#ffffff'];
-  const color = colors[Math.floor(Math.random() * colors.length)];
-  this.fireworks.push(new Firework(x, y, color));
-}
-  resize() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
-  }
-
-  launchRandom() {
-    const x = Math.random() * this.canvas.width;
-    const y = Math.random() * this.canvas.height * 0.5;
-
-    const colors = ['#d4a93a', '#f2d4db', '#c8ddd3', '#ffffff'];
-    const color = colors[Math.floor(Math.random() * colors.length)];
-
-    this.fireworks.push(new Firework(x, y, color));
-  }
-
-  update() {
-    const now = Date.now();
-
-    // 🔥 LOOP CONTROL (this is the key)
-    if (now - this.lastLaunch > this.launchInterval &&
-        this.fireworks.length < this.maxFireworks) {
-      this.launchRandom();
-      this.lastLaunch = now;
-    }
-
-    for (let i = this.fireworks.length - 1; i >= 0; i--) {
-      this.fireworks[i].update();
-
-      if (this.fireworks[i].isDone()) {
-        this.fireworks.splice(i, 1);
+      isDone() {
+        return this.exploded && this.particles.length === 0;
       }
     }
-  }
 
-  draw() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    class Particle {
+      constructor(x, y, angle, speed, size, color) {
+        this.x = x; this.y = y;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.size = size;
+        this.color = color;
+        this.alpha = 1;
+        this.decay = 0.02;
+        this.gravity = 0.03;
+        this.friction = 0.98;
+      }
 
-    this.ctx.globalCompositeOperation = 'lighter';
+      update() {
+        this.vx *= this.friction;
+        this.vy *= this.friction;
+        this.vy += this.gravity;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= this.decay;
+      }
 
-    this.fireworks.forEach(fw => fw.draw(this.ctx));
+      draw(ctx) {
+        if (this.alpha <= 0.02) return;
+        // ✅ FIX #2: Save/restore context to prevent alpha leak
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
 
-    this.ctx.globalCompositeOperation = 'source-over';
-  }
+    class FireworksSystem {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.fireworks = [];
+        this.lastLaunch = 0;
+        this.launchInterval = 700;
+        this.maxFireworks = 2;
+        this.running = true;
+      }
 
-  animate() {
-    if (!this.running) return;
+      resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+      }
 
-    this.update();
-    this.draw();
+      launch(x, y) {
+        const colors = ['#d4a93a', '#f2d4db', '#c8ddd3', '#ffffff'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        this.fireworks.push(new Firework(x, y, color));
+      }
 
-    requestAnimationFrame(() => this.animate());
-  }
+      launchRandom() {
+        const x = Math.random() * this.canvas.width * 0.8 + this.canvas.width * 0.1;
+        const y = Math.random() * this.canvas.height * 0.4 + this.canvas.height * 0.15;
+        this.launch(x, y);
+      }
 
-  start() {
-    this.running = true;
-    this.resize();
-    this.canvas.classList.add('active');
+      update() {
+        const now = Date.now();
+        // 🔥 Loop control: auto-launch fireworks
+        if (now - this.lastLaunch > this.launchInterval && 
+            this.fireworks.length < this.maxFireworks) {
+          this.launchRandom();
+          this.lastLaunch = now;
+        }
+        for (let i = this.fireworks.length - 1; i >= 0; i--) {
+          this.fireworks[i].update();
+          if (this.fireworks[i].isDone()) {
+            this.fireworks.splice(i, 1);
+          }
+        }
+      }
 
-    this.animate();
-  }
+      draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.globalCompositeOperation = 'lighter';
+        this.fireworks.forEach(fw => fw.draw(this.ctx));
+        // ✅ FIX #4: Reset composite operation
+        this.ctx.globalCompositeOperation = 'source-over';
+      }
 
-  stop() {
-    this.running = false;
-    this.canvas.classList.remove('active');
-    this.fireworks = [];
-  }
-}
+      animate() {
+        if (!this.running) return;
+        this.update();
+        this.draw();
+        requestAnimationFrame(() => this.animate());
+      }
 
+      start() {
+        // ✅ FIX #5: Removed unused duration parameter
+        this.running = true;
+        this.resize();
+        this.canvas.classList.add('active');
+        this.animate();
+        // Initial burst
+        for (let i = 0; i < 4; i++) {
+          setTimeout(() => this.launchRandom(), i * 250);
+        }
+      }
 
+      stop() {
+        this.running = false;
+        this.canvas.classList.remove('active');
+        this.fireworks = [];
+      }
+    }
 
     /* ── SLOWER CUSTOM SCROLL ── */
-    let scrollTarget = null;
-    let scrollStart = 0;
-    let scrollStartTime = 0;
-    const scrollDuration = 1800; // Slower: 1.8 seconds
+    let scrollTarget = null, scrollStart = 0, scrollStartTime = 0;
+    const scrollDuration = 1800;
 
     function easeInOutQuad(t) {
       return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
     }
 
     function customScroll(targetY) {
-      if (scrollTarget !== null) return; // Prevent queueing
-      
+      if (scrollTarget !== null) return;
       scrollTarget = targetY;
       scrollStart = window.scrollY;
       scrollStartTime = performance.now();
@@ -986,19 +968,13 @@ class FireworksSystem {
         const elapsed = timestamp - scrollStartTime;
         const progress = Math.min(elapsed / scrollDuration, 1);
         const eased = easeInOutQuad(progress);
-        
         window.scrollTo(0, scrollStart + (scrollTarget - scrollStart) * eased);
-        
-        if (progress < 1) {
-          requestAnimationFrame(scrollStep);
-        } else {
-          scrollTarget = null;
-        }
+        if (progress < 1) requestAnimationFrame(scrollStep);
+        else scrollTarget = null;
       }
       requestAnimationFrame(scrollStep);
     }
 
-    // Intercept anchor clicks for slow scroll
     document.addEventListener('click', (e) => {
       const anchor = e.target.closest('a[href^="#"]');
       if (anchor) {
@@ -1013,7 +989,6 @@ class FireworksSystem {
       }
     });
 
-    // Also handle hero scroll indicator
     const heroScroll = document.querySelector('.hero-scroll');
     if (heroScroll) {
       heroScroll.addEventListener('click', (e) => {
@@ -1100,7 +1075,6 @@ class FireworksSystem {
       currentX = lerp(currentX, targetX, 0.08);
       currentY = lerp(currentY, targetY, 0.08);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       if (isHero) {
         const radii = [320, 180, 80];
         radii.forEach((r, i) => {
@@ -1160,9 +1134,9 @@ class FireworksSystem {
         el.addEventListener('animationend', () => el.remove());
       }
     }
+
     document.addEventListener('click', (e) => {
       spawnSparkles(e.clientX, e.clientY);
-      // Launch firework on click if active
       const fwCanvas = document.getElementById('fireworks-canvas');
       if (fwCanvas.classList.contains('active') && window.fireworksSystem) {
         window.fireworksSystem.launch(e.clientX, e.clientY - 80);
@@ -1194,7 +1168,7 @@ class FireworksSystem {
       window.fireworksSystem = new FireworksSystem(fwCanvas);
       
       setTimeout(() => {
-        window.fireworksSystem.start(9000);
+        window.fireworksSystem.start(); // ✅ No duration param
       }, 1500);
       
       window.addEventListener('resize', () => window.fireworksSystem?.resize());
