@@ -3,868 +3,790 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ahmed-Bassent</title>
-  
-  <!-- ✅ Favicon: Gold star on dark background -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231c160e'/%3E%3Ctext x='16' y='21' text-anchor='middle' fill='%23d4a93a' font-family='serif' font-size='18'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E" />
-  
+  <title>Ahmed & Bassent — ٢٠٢٦</title>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23080808'/%3E%3Ctext x='16' y='21' text-anchor='middle' fill='%23c9a84c' font-family='serif' font-size='18'%3E%E2%9D%A4%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600&display=swap" rel="stylesheet" />
+
   <style>
     :root {
-      --ink: #0d0a06;
-      --sand: #f5ede0;
-      --bone: #faf6f0;
-      --gold: #b8922a;
-      --gold-bright: #d4a93a;
-      --gold-pale: #ecdaaa;
-      --blush: #d4788a;
-      --blush-pale: #f2d4db;
-      --sage: #7a9e8a;
-      --sage-pale: #c8ddd3;
-      --charcoal: #1c160e;
-      --warm-white: #fffcf7;
+      --bg: #060607;
+      --surface: #0e0e10;
+      --border: rgba(201,168,76,0.15);
+      --gold: #c9a84c;
+      --gold-bright: #e4c46a;
+      --gold-dim: rgba(201,168,76,0.4);
+      --rose: #c87d8a;
+      --rose-pale: rgba(200,125,138,0.15);
+      --cream: #f4ede0;
+      --text: #ede8df;
+      --text-dim: rgba(237,232,223,0.45);
+      --font-display: 'Cormorant Garamond', serif;
+      --font-arabic: 'Amiri', serif;
+      --font-ui: 'Cairo', sans-serif;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    /* Slower, smoother scroll */
-    html { scroll-behavior: auto; }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Cairo', sans-serif;
-      background: var(--bone);
-      color: var(--ink);
+      font-family: var(--font-ui);
+      background: var(--bg);
+      color: var(--text);
       direction: rtl;
       overflow-x: hidden;
     }
 
-    /* ============================
-       FIREWORKS CANVAS
-    ============================ */
-    #fireworks-canvas {
+    /* ── CANVAS PARTICLES ── */
+    #particle-canvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       pointer-events: none;
-      z-index: 10000;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-    #fireworks-canvas.active { opacity: 1; }
-
-    /* ============================
-       HERO
-    ============================ */
-    .hero {
-      min-height: 100vh;
-      display: grid;
-      grid-template-rows: 1fr auto;
-      position: relative;
-      overflow: hidden;
-      background: var(--charcoal);
+      z-index: 0;
     }
 
-    .hero::after {
+    /* ── NOISE OVERLAY ── */
+    body::before {
       content: '';
-      position: absolute;
+      position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
-      background-size: 256px;
-      pointer-events: none;
-      z-index: 2;
-      mix-blend-mode: overlay;
-      opacity: 0.6;
-    }
-
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
-    }
-    .blob-1 {
-      width: 60vw; height: 60vw;
-      max-width: 600px; max-height: 600px;
-      background: radial-gradient(circle, rgba(184,146,42,0.18), transparent 70%);
-      top: -15%; right: -10%;
-      animation: drift1 18s ease-in-out infinite alternate;
-    }
-    .blob-2 {
-      width: 50vw; height: 50vw;
-      max-width: 500px; max-height: 500px;
-      background: radial-gradient(circle, rgba(212,120,138,0.14), transparent 70%);
-      bottom: -10%; left: -10%;
-      animation: drift2 22s ease-in-out infinite alternate;
-    }
-    .blob-3 {
-      width: 30vw; height: 30vw;
-      max-width: 300px; max-height: 300px;
-      background: radial-gradient(circle, rgba(122,158,138,0.12), transparent 70%);
-      top: 50%; left: 30%;
-      transform: translateY(-50%);
-      animation: drift1 15s ease-in-out 3s infinite alternate;
-    }
-    @keyframes drift1 {
-      from { transform: translate(0,0) scale(1); }
-      to { transform: translate(30px, 20px) scale(1.08); }
-    }
-    @keyframes drift2 {
-      from { transform: translate(0,0) scale(1); }
-      to { transform: translate(-20px, -30px) scale(1.06); }
-    }
-
-    .geo-lines {
-      position: absolute;
-      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      background-size: 200px;
       pointer-events: none;
       z-index: 1;
-      opacity: 0.07;
+      opacity: 0.5;
+    }
+
+    /* ══════════════════════════════
+       HERO
+    ══════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    /* Radial glow backdrop */
+    .hero-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 40%, rgba(201,168,76,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 70%, rgba(200,125,138,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Thin geometric ring */
+    .hero-ring {
+      position: absolute;
+      width: min(600px, 90vw);
+      height: min(600px, 90vw);
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.08);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: ringPulse 8s ease-in-out infinite;
+    }
+    .hero-ring::before {
+      content: '';
+      position: absolute;
+      inset: 30px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.05);
+    }
+    @keyframes ringPulse {
+      0%,100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.03); }
     }
 
     .hero-inner {
       position: relative;
-      z-index: 3;
+      z-index: 2;
+      text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 80px 24px 60px;
-      min-height: 100vh;
+      gap: 0;
     }
 
-    .label-top {
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      color: var(--gold-pale);
-      text-transform: uppercase;
-      margin-bottom: 32px;
+    /* Bismillah */
+    .hero-bismillah {
+      font-family: var(--font-arabic);
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      color: var(--gold-dim);
+      letter-spacing: 0.08em;
+      margin-bottom: 48px;
       opacity: 0;
-      animation: rise 1s 0.2s ease forwards;
+      animation: fadeUp 1s 0.3s ease forwards;
     }
 
-    .hero-line {
+    /* Label */
+    .hero-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: fadeUp 1s 0.5s ease forwards;
+    }
+
+    /* Main names */
+    .hero-name-ar {
+      font-family: var(--font-arabic);
+      font-weight: 700;
+      font-size: clamp(5.5rem, 14vw, 10rem);
+      line-height: 0.85;
+      letter-spacing: -0.01em;
+      opacity: 0;
+      animation: fadeUp 1.2s ease forwards;
+      display: block;
+    }
+    .hero-name-ar.n1 {
+      color: var(--cream);
+      animation-delay: 0.6s;
+    }
+    .hero-name-ar.n2 {
+      color: var(--rose);
+      animation-delay: 0.95s;
+    }
+
+    .hero-amp {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--gold);
+      display: block;
+      padding: 22px 0;
+      opacity: 0;
+      animation: fadeUp 1s 0.8s ease forwards;
+    }
+
+    /* Divider line */
+    .hero-divider {
       width: 1px;
       height: 0;
-      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
-      margin: 0 auto 32px;
-      animation: lineDrop 1.2s 0.4s ease forwards;
+      background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+      margin: 40px auto;
+      animation: grow 1.2s 1.3s ease forwards;
     }
-    @keyframes lineDrop { to { height: 60px; } }
+    @keyframes grow { to { height: 70px; } }
 
-    .bismillah {
-      font-family: 'Amiri', serif;
+    /* Date block */
+    .hero-date {
+      opacity: 0;
+      animation: fadeUp 1s 1.5s ease forwards;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-date-main {
+      font-family: var(--font-display);
       font-size: clamp(1rem, 2.5vw, 1.3rem);
-      color: var(--gold-pale);
-      margin-bottom: 40px;
-      opacity: 0;
-      animation: rise 1s 0.5s ease forwards;
-    }
-
-    .names-wrap { position: relative; margin-bottom: 20px; }
-
-    .name-ahmed {
-      font-family: 'Amiri', serif;
-      font-size: clamp(4rem, 12vw, 8rem);
-      font-weight: 700;
-      color: var(--warm-white);
-      line-height: 0.9;
-      opacity: 0;
-      animation: rise 1.2s 0.7s ease forwards;
-      display: block;
-    }
-
-    .connector {
-      font-family: 'Cairo', sans-serif;
-      font-size: clamp(0.8rem, 2vw, 1rem);
       font-weight: 300;
-      color: var(--gold);
-      letter-spacing: 0.4em;
-      display: block;
-      padding: 18px 0;
-      opacity: 0;
-      animation: rise 1s 1s ease forwards;
+      font-style: italic;
+      color: var(--cream);
+      letter-spacing: 0.08em;
+    }
+    .hero-date-sub {
+      font-size: 0.62rem;
+      letter-spacing: 0.28em;
+      color: var(--text-dim);
     }
 
-    .name-basant {
-      font-family: 'Amiri', serif;
-      font-size: clamp(4rem, 12vw, 8rem);
-      font-weight: 700;
-      color: var(--blush-pale);
-      line-height: 0.9;
+    /* Tagline */
+    .hero-tagline {
+      margin-top: 36px;
+      font-family: var(--font-arabic);
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      color: var(--text-dim);
+      line-height: 2;
       opacity: 0;
-      animation: rise 1.2s 1.2s ease forwards;
-      display: block;
+      animation: fadeUp 1s 1.7s ease forwards;
     }
 
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(20px); }
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      animation: fadeUp 1s 2.2s ease forwards;
+      cursor: pointer;
+    }
+    .scroll-hint-mouse {
+      width: 22px;
+      height: 36px;
+      border: 1px solid var(--gold-dim);
+      border-radius: 11px;
+      display: flex;
+      justify-content: center;
+      padding-top: 6px;
+    }
+    .scroll-hint-wheel {
+      width: 2px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 1px;
+      animation: wheelScroll 1.8s ease infinite;
+    }
+    @keyframes wheelScroll {
+      0%,100% { transform: translateY(0); opacity: 1; }
+      80% { transform: translateY(10px); opacity: 0; }
+    }
+    .scroll-hint span {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: var(--gold-dim);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .date-strip {
-      margin-top: 50px;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      opacity: 0;
-      animation: rise 1s 1.5s ease forwards;
-    }
-    .date-strip .strip-line {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(184,146,42,0.5));
-    }
-    .date-strip .strip-line.rev {
-      background: linear-gradient(270deg, transparent, rgba(184,146,42,0.5));
-    }
-    .date-strip .date-text {
-      font-size: clamp(0.85rem, 1.8vw, 1rem);
-      font-weight: 300;
-      color: var(--gold-pale);
-      letter-spacing: 0.12em;
-      white-space: nowrap;
+    /* ══════════════════════════════
+       SHARED SECTION STYLES
+    ══════════════════════════════ */
+    .section {
+      position: relative;
+      z-index: 2;
+      padding: 110px 24px;
     }
 
-    .tagline {
-      margin-top: 18px;
-      font-size: clamp(0.85rem, 1.8vw, 1rem);
-      font-weight: 300;
-      color: rgba(255,252,247,0.5);
-      opacity: 0;
-      animation: rise 1s 1.7s ease forwards;
+    .section-inner {
+      max-width: 760px;
+      margin: 0 auto;
     }
 
-    .hero-scroll {
-      position: absolute;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      opacity: 0;
-      animation: rise 1s 2s ease forwards;
-      cursor: pointer;
-    }
-    .hero-scroll .scroll-track {
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(to bottom, var(--gold), transparent);
-      animation: scrollPulse 2s ease infinite;
-    }
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 1; transform: scaleY(1); }
-      50% { opacity: 0.4; transform: scaleY(0.7); }
-    }
-    .hero-scroll span {
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      color: rgba(184,146,42,0.6);
-    }
-
-    /* ============================
-       PETALS
-    ============================ */
-    .petal {
-      position: fixed;
-      top: -30px;
-      width: 6px;
-      height: 12px;
-      background: radial-gradient(ellipse, rgba(212,120,138,0.6), transparent);
-      border-radius: 50% 0 50% 0;
-      pointer-events: none;
-      z-index: 0;
-      animation: petalFall linear infinite;
-    }
-    @keyframes petalFall {
-      to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-    }
-
-    /* ============================
-       SECTION SHARED
-    ============================ */
-    section { padding: 90px 24px; }
-
-    .s-eyebrow {
-      font-size: 0.65rem;
-      letter-spacing: 0.3em;
+    .s-tag {
+      display: block;
+      font-size: 0.58rem;
+      letter-spacing: 0.35em;
       color: var(--gold);
       text-transform: uppercase;
+      margin-bottom: 16px;
       text-align: center;
-      margin-bottom: 12px;
-      display: block;
     }
-    .s-title {
-      font-family: 'Amiri', serif;
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      color: var(--charcoal);
+    .s-heading {
+      font-family: var(--font-arabic);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      color: var(--cream);
       text-align: center;
-      margin-bottom: 8px;
-    }
-    .s-rule {
-      width: 48px;
-      height: 1px;
-      background: var(--gold);
-      margin: 16px auto 50px;
+      margin-bottom: 60px;
+      font-weight: 400;
     }
 
-    /* ============================
-       QURAN
-    ============================ */
-    .quran-section {
-      background: var(--warm-white);
+    /* ══════════════════════════════
+       VERSE / QURAN
+    ══════════════════════════════ */
+    .verse-section {
+      background: var(--surface);
+    }
+
+    .verse-card {
       position: relative;
+      border: 1px solid var(--border);
+      padding: 64px 56px;
       overflow: hidden;
     }
-    .quran-section::before {
+
+    /* Corner accents */
+    .verse-card::before,
+    .verse-card::after {
       content: '';
       position: absolute;
-      top: -80px; right: -80px;
-      width: 320px; height: 320px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(184,146,42,0.06), transparent 70%);
+      width: 40px;
+      height: 40px;
+      border-color: var(--gold-dim);
+      border-style: solid;
+    }
+    .verse-card::before {
+      top: 16px;
+      right: 16px;
+      border-width: 1px 1px 0 0;
+    }
+    .verse-card::after {
+      bottom: 16px;
+      left: 16px;
+      border-width: 0 0 1px 1px;
+    }
+
+    /* Internal corners */
+    .verse-card .corner-tl,
+    .verse-card .corner-br {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-color: var(--gold-dim);
+      border-style: solid;
+    }
+    .verse-card .corner-tl {
+      top: 16px; left: 16px;
+      border-width: 1px 0 0 1px;
+    }
+    .verse-card .corner-br {
+      bottom: 16px; right: 16px;
+      border-width: 0 1px 1px 0;
+    }
+
+    /* Glow inside card */
+    .verse-card-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(201,168,76,0.04), transparent);
       pointer-events: none;
     }
-    .quran-card {
-      max-width: 700px;
-      margin: 0 auto;
-      background: var(--charcoal);
-      padding: 56px 48px;
-      position: relative;
-      overflow: hidden;
+
+    .verse-ornament {
+      font-family: var(--font-arabic);
+      font-size: 2rem;
+      color: var(--gold-dim);
+      text-align: center;
+      margin-bottom: 32px;
+      display: block;
     }
-    .quran-card::before {
-      content: '';
-      position: absolute;
-      top: 0; right: 0;
-      width: 100%; height: 3px;
-      background: linear-gradient(90deg, transparent, var(--gold-bright), var(--blush), var(--gold-bright), transparent);
-    }
-    .quran-card::after {
-      content: '';
-      position: absolute;
-      bottom: -60px; left: -60px;
-      width: 200px; height: 200px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(212,120,138,0.08), transparent);
-    }
-    .quran-verse {
+
+    .verse-text {
       font-family: 'Amiri Quran', serif;
-      font-size: clamp(1.3rem, 3vw, 1.8rem);
-      color: var(--warm-white);
-      line-height: 2.2;
+      font-size: clamp(1.2rem, 2.8vw, 1.7rem);
+      color: var(--cream);
+      line-height: 2.3;
       text-align: center;
       position: relative;
       z-index: 1;
-      margin-bottom: 24px;
-    }
-    .quran-ref {
-      text-align: center;
-      font-size: 0.8rem;
-      font-weight: 300;
-      letter-spacing: 0.1em;
-      color: var(--gold);
-      position: relative;
-      z-index: 1;
-    }
-    .quran-ornament {
-      text-align: center;
-      font-size: 1.6rem;
-      color: var(--gold);
-      opacity: 0.3;
       margin-bottom: 28px;
     }
 
-    /* ============================
+    .verse-ref {
+      text-align: center;
+      font-family: var(--font-arabic);
+      font-size: 0.8rem;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 600px) {
+      .verse-card { padding: 40px 24px; }
+    }
+
+    /* ══════════════════════════════
        COUNTDOWN
-    ============================ */
+    ══════════════════════════════ */
     .countdown-section {
-      background: var(--sand);
+      background: var(--bg);
       text-align: center;
     }
-    .countdown-grid {
+
+    .countdown-wrap {
       display: flex;
       justify-content: center;
-      gap: 12px;
+      align-items: flex-start;
+      gap: 0;
       flex-wrap: wrap;
-      margin-top: 0;
     }
-    .count-unit {
+
+    .count-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 90px;
-    }
-    .count-num-wrap {
-      width: 90px;
-      height: 90px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--charcoal);
+      padding: 0 20px;
       position: relative;
-      margin-bottom: 10px;
     }
-    .count-num-wrap::before {
+
+    .count-item + .count-item::before {
+      content: ':';
+      position: absolute;
+      right: 100%;
+      top: 22px;
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: var(--gold-dim);
+      font-weight: 300;
+      pointer-events: none;
+    }
+
+    .count-num {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 9vw, 5.5rem);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1;
+      display: block;
+      font-variant-numeric: tabular-nums;
+      position: relative;
+    }
+
+    /* Thin underline accent */
+    .count-num::after {
       content: '';
       position: absolute;
-      inset: 0;
-      border: 1px solid rgba(184,146,42,0.3);
-      margin: 4px;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 1px;
+      background: var(--gold);
     }
-    .count-num {
-      font-family: 'Amiri', serif;
-      font-size: 2.4rem;
-      color: var(--gold-bright);
-      line-height: 1;
-    }
+
     .count-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      color: var(--gold);
+      margin-top: 18px;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--gold-dim);
       font-weight: 600;
     }
-    .count-sep {
-      font-family: 'Amiri', serif;
-      font-size: 2rem;
-      color: rgba(184,146,42,0.3);
-      line-height: 90px;
-      margin-bottom: 20px;
-      align-self: flex-start;
-    }
 
-    /* ============================
+    /* ══════════════════════════════
        WISHES
-    ============================ */
-    .wishes-section { background: var(--bone); }
-    .wishes-list {
-      max-width: 750px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-      background: var(--gold-pale);
-    }
-    .wish-item {
-      background: var(--warm-white);
-      padding: 32px 40px;
+    ══════════════════════════════ */
+    .wishes-section { background: var(--surface); }
+
+    .wishes-grid {
       display: grid;
-      grid-template-columns: 3px 1fr;
-      gap: 24px;
-      align-items: center;
-      transition: background 0.3s;
-    }
-    .wish-item:hover { background: #fffdf9; }
-    .wish-bar {
-      width: 3px;
-      height: 100%;
-      min-height: 60px;
-      background: linear-gradient(to bottom, var(--gold), var(--blush));
-    }
-    .wish-text {
-      font-family: 'Amiri', serif;
-      font-size: clamp(1.05rem, 2vw, 1.2rem);
-      color: var(--charcoal);
-      line-height: 1.9;
-      font-style: italic;
-    }
-    .wish-from {
-      font-family: 'Cairo', sans-serif;
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      color: var(--gold);
-      margin-top: 10px;
-      font-style: normal;
+      gap: 1px;
+      background: var(--border);
     }
 
-    /* ============================
-       FOOTER
-    ============================ */
-    footer {
-      background: var(--charcoal);
-      padding: 70px 24px 50px;
-      text-align: center;
+    .wish-card {
+      background: var(--surface);
+      padding: 48px 44px;
+      display: grid;
+      grid-template-columns: 1px 1fr;
+      gap: 28px;
+      align-items: center;
+      transition: background 0.4s;
       position: relative;
       overflow: hidden;
     }
-    footer::before {
+
+    .wish-card::after {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), var(--blush), var(--gold), transparent);
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 30% 50%, rgba(201,168,76,0.03), transparent);
+      opacity: 0;
+      transition: opacity 0.5s;
     }
-    footer::after {
-      content: '';
-      position: absolute;
-      bottom: -100px; right: -100px;
-      width: 400px; height: 400px;
+    .wish-card:hover::after { opacity: 1; }
+
+    .wish-accent {
+      height: 100%;
+      min-height: 80px;
+      background: linear-gradient(to bottom, var(--gold), var(--rose));
+      transition: opacity 0.4s;
+    }
+    .wish-card:hover .wish-accent { opacity: 1; }
+
+    .wish-quote {
+      font-family: var(--font-arabic);
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-style: italic;
+      color: var(--cream);
+      line-height: 2;
+    }
+
+    .wish-source {
+      margin-top: 12px;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      font-style: normal;
+      font-family: var(--font-ui);
+    }
+
+    @media (max-width: 600px) {
+      .wish-card { padding: 32px 20px; }
+    }
+
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
+    footer {
+      background: var(--bg);
+      padding: 100px 24px 60px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-ring {
+      width: 80px;
+      height: 80px;
+      border: 1px solid var(--gold-dim);
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(184,146,42,0.05), transparent);
-      pointer-events: none;
-    }
-    .footer-monogram {
-      width: 70px;
-      height: 70px;
-      border: 1px solid rgba(184,146,42,0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 28px;
+      margin: 0 auto 36px;
       position: relative;
-      z-index: 1;
     }
-    .footer-monogram::before {
+    .footer-ring::before {
       content: '';
       position: absolute;
-      inset: 4px;
-      border: 1px solid rgba(184,146,42,0.2);
+      inset: 8px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.1);
     }
-    .footer-monogram span {
-      font-family: 'Amiri', serif;
-      font-size: 1.5rem;
+    .footer-ring-icon {
+      font-family: var(--font-arabic);
+      font-size: 1.6rem;
       color: var(--gold);
     }
+
     .footer-names {
-      font-family: 'Amiri', serif;
-      font-size: clamp(1.6rem, 4vw, 2.2rem);
-      color: var(--warm-white);
-      margin-bottom: 14px;
-      position: relative;
-      z-index: 1;
+      font-family: var(--font-arabic);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--cream);
+      margin-bottom: 28px;
     }
+
     .footer-dua {
-      font-family: 'Amiri', serif;
-      font-size: clamp(0.95rem, 2vw, 1.1rem);
-      color: rgba(245,237,224,0.55);
-      line-height: 1.9;
-      max-width: 480px;
-      margin: 0 auto 30px;
-      position: relative;
-      z-index: 1;
+      font-family: var(--font-arabic);
+      font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+      color: var(--text-dim);
+      line-height: 2.1;
+      max-width: 440px;
+      margin: 0 auto 36px;
     }
+
     .footer-date {
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
-      color: rgba(184,146,42,0.4);
-      position: relative;
-      z-index: 1;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--gold-dim);
+      font-style: italic;
     }
+
     .footer-hearts {
-      font-size: 0.8rem;
-      color: var(--blush);
-      letter-spacing: 0.5em;
-      margin: 20px 0;
-      animation: pulse 3s ease infinite;
-      position: relative;
-      z-index: 1;
+      margin: 24px 0;
+      font-size: 0.6rem;
+      letter-spacing: 0.6em;
+      color: var(--rose);
+      animation: heartbeat 3.5s ease infinite;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+    @keyframes heartbeat {
+      0%,90%,100% { opacity: 0.6; transform: scale(1); }
+      45% { opacity: 1; transform: scale(1.2); }
     }
 
-    /* ============================
-       SPOTLIGHT & SPARKLES
-    ============================ */
-    #spotlight {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-      mix-blend-mode: screen;
-      transition: opacity 0.4s;
-    }
-    .sparkle {
-      position: fixed;
-      pointer-events: none;
-      z-index: 9998;
-      border-radius: 50%;
-      animation: sparklePop 0.7s ease forwards;
-    }
-    @keyframes sparklePop {
-      0%   { transform: scale(0) rotate(0deg);   opacity: 1; }
-      60%  { transform: scale(1.3) rotate(120deg); opacity: 0.9; }
-      100% { transform: scale(0) rotate(240deg); opacity: 0; }
-    }
-    .star-burst {
-      position: fixed;
-      pointer-events: none;
-      z-index: 9998;
-      font-size: 14px;
-      animation: starFloat 1s ease forwards;
-    }
-    @keyframes starFloat {
-      0%   { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-60px) scale(0.3); opacity: 0; }
-    }
-
-    /* ============================
-       SCROLL REVEAL
-    ============================ */
+    /* ══════════════════════════════
+       REVEAL ANIMATION
+    ══════════════════════════════ */
     .reveal {
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transform: translateY(24px);
+      transition: opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
     }
-    .reveal.visible {
-      opacity: 1;
-      transform: none;
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* ══════════════════════════════
+       MAGNETIC CURSOR GLOW
+    ══════════════════════════════ */
+    #cursor-glow {
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.4s;
     }
 
-    /* ============================
-       RESPONSIVE
-    ============================ */
-    @media (max-width: 600px) {
-      .quran-card { padding: 36px 24px; }
-      .count-sep { display: none; }
-      .wish-item { padding: 24px 20px; }
-    }
-
-    /* ============================
-       CUSTOM CURSOR
-    ============================ */
-    body {
-      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="%23d4a93a" opacity="0.3"/><circle cx="16" cy="16" r="6" fill="%23b8922a"/></svg>') 16 16, auto;
-    }
-    a, button, .hero-scroll, .wish-item, .count-unit {
-      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="%23d4788a" opacity="0.4"/><text x="16" y="20" text-anchor="middle" fill="%23b8922a" font-size="16">✦</text></svg>') 16 16, pointer;
-    }
-    @media (max-width: 768px) {
-      body { cursor: auto; }
-      a, button, .hero-scroll, .wish-item { cursor: pointer; }
+    @media (pointer: coarse) {
+      #cursor-glow { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- FIREWORKS CANVAS -->
-  <canvas id="fireworks-canvas"></canvas>
-  <!-- SPOTLIGHT CANVAS -->
-  <canvas id="spotlight"></canvas>
+  <canvas id="particle-canvas"></canvas>
+  <div id="cursor-glow"></div>
 
-  <!-- HERO -->
+  <!-- ════════ HERO ════════ -->
   <section class="hero">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-
-    <svg class="geo-lines" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-      <line x1="600" y1="0" x2="600" y2="800" stroke="#c9a84c" stroke-width="0.5"/>
-      <line x1="0" y1="400" x2="1200" y2="400" stroke="#c9a84c" stroke-width="0.5"/>
-      <circle cx="600" cy="400" r="220" stroke="#c9a84c" stroke-width="0.5" fill="none"/>
-      <circle cx="600" cy="400" r="320" stroke="#c9a84c" stroke-width="0.5" fill="none" stroke-dasharray="4 8"/>
-      <polygon points="600,180 780,290 780,510 600,620 420,510 420,290" stroke="#c9a84c" stroke-width="0.5" fill="none"/>
-    </svg>
+    <div class="hero-glow"></div>
+    <div class="hero-ring"></div>
 
     <div class="hero-inner">
-      <p class="label-top">دعوة زواج</p>
-      <div class="hero-line"></div>
-      <p class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+      <p class="hero-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+      <span class="hero-label">دعوة زواج</span>
 
-      <div class="names-wrap">
-        <span class="name-ahmed">أحمد</span>
-        <span class="connector">✦ &amp; ✦</span>
-        <span class="name-basant">بسنت</span>
+      <span class="hero-name-ar n1">أحمد</span>
+      <span class="hero-amp">& </span>
+      <span class="hero-name-ar n2">بسنت</span>
+
+      <div class="hero-divider"></div>
+
+      <div class="hero-date">
+        <span class="hero-date-main">السبت، ٢٠ يونيو ٢٠٢٦</span>
+        <span class="hero-date-sub">٢٠ · ٠٦ · ٢٠٢٦</span>
       </div>
 
-      <div class="date-strip">
-        <div class="strip-line rev"></div>
-        <span class="date-text">السبت · ٢٠ يونيو ٢٠٢٦</span>
-        <div class="strip-line"></div>
-      </div>
-      <p class="tagline">يسعدان بدعوتكم لمشاركتهما فرحة الزواج المبارك</p>
+      <p class="hero-tagline">يسعدان بدعوتكم لمشاركتهما فرحة الزواج المبارك</p>
     </div>
 
-    <div class="hero-scroll">
-      <div class="scroll-track"></div>
+    <div class="scroll-hint" id="scrollHint">
+      <div class="scroll-hint-mouse">
+        <div class="scroll-hint-wheel"></div>
+      </div>
       <span>scroll</span>
     </div>
   </section>
 
-  <!-- QURAN -->
-  <section class="quran-section">
-    <div class="reveal">
-      <div class="quran-card">
-        <p class="quran-ornament">﷽</p>
-        <p class="quran-verse">﴿ وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ﴾</p>
-        <p class="quran-ref">سورة الروم — الآية ٢١</p>
+  <!-- ════════ VERSE ════════ -->
+  <section class="section verse-section">
+    <div class="section-inner">
+      <div class="verse-card reveal">
+        <div class="verse-card-glow"></div>
+        <div class="corner-tl"></div>
+        <div class="corner-br"></div>
+        <span class="verse-ornament">﷽</span>
+        <p class="verse-text">﴿ وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ﴾</p>
+        <p class="verse-ref">سورة الروم — الآية ٢١</p>
       </div>
     </div>
   </section>
 
-  <!-- COUNTDOWN -->
-  <section class="countdown-section">
-    <span class="s-eyebrow reveal">العد التنازلي</span>
-    <h2 class="s-title reveal">حتى نلتقي</h2>
-    <div class="s-rule reveal"></div>
-    <div class="countdown-grid reveal" id="countdown">
-      <div class="count-unit">
-        <div class="count-num-wrap"><span class="count-num" id="days">00</span></div>
-        <span class="count-label">يوم</span>
-      </div>
-      <div class="count-sep">:</div>
-      <div class="count-unit">
-        <div class="count-num-wrap"><span class="count-num" id="hours">00</span></div>
-        <span class="count-label">ساعة</span>
-      </div>
-      <div class="count-sep">:</div>
-      <div class="count-unit">
-        <div class="count-num-wrap"><span class="count-num" id="mins">00</span></div>
-        <span class="count-label">دقيقة</span>
-      </div>
-      <div class="count-sep">:</div>
-      <div class="count-unit">
-        <div class="count-num-wrap"><span class="count-num" id="secs">00</span></div>
-        <span class="count-label">ثانية</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- WISHES -->
-  <section class="wishes-section">
-    <span class="s-eyebrow reveal">من القلب</span>
-    <h2 class="s-title reveal">أجمل التهاني</h2>
-    <div class="s-rule reveal"></div>
-    <div class="wishes-list reveal">
-      <div class="wish-item">
-        <div class="wish-bar"></div>
-        <div>
-          <p class="wish-text">"بارك الله لكما وبارك عليكما وجمع بينكما في خير"</p>
-          <p class="wish-from">— دعاء النبي ﷺ</p>
+  <!-- ════════ COUNTDOWN ════════ -->
+  <section class="section countdown-section">
+    <div class="section-inner">
+      <span class="s-tag reveal">العد التنازلي</span>
+      <h2 class="s-heading reveal">حتى نلتقي</h2>
+      <div class="countdown-wrap reveal" id="countdown">
+        <div class="count-item">
+          <span class="count-num" id="days">00</span>
+          <span class="count-label">يوم</span>
         </div>
-      </div>
-      <div class="wish-item">
-        <div class="wish-bar"></div>
-        <div>
-          <p class="wish-text">"كل يوم يزيد حبكما، وبيتكما مليء بالضحك والسرور"</p>
-          <p class="wish-from">— من القلب</p>
+        <div class="count-item">
+          <span class="count-num" id="hours">00</span>
+          <span class="count-label">ساعة</span>
         </div>
-      </div>
-      <div class="wish-item">
-        <div class="wish-bar"></div>
-        <div>
-          <p class="wish-text">"أسعد الله قلبيكما وجعل زواجكما مباركاً على مدى العمر"</p>
-          <p class="wish-from">— أهل وأحباء</p>
+        <div class="count-item">
+          <span class="count-num" id="mins">00</span>
+          <span class="count-label">دقيقة</span>
+        </div>
+        <div class="count-item">
+          <span class="count-num" id="secs">00</span>
+          <span class="count-label">ثانية</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- ════════ WISHES ════════ -->
+  <section class="section wishes-section">
+    <div class="section-inner">
+      <span class="s-tag reveal">من القلب</span>
+      <h2 class="s-heading reveal">أجمل التهاني</h2>
+      <div class="wishes-grid reveal">
+        <div class="wish-card">
+          <div class="wish-accent"></div>
+          <div>
+            <p class="wish-quote">"بارك الله لكما وبارك عليكما وجمع بينكما في خير"</p>
+            <p class="wish-source">— دعاء النبي ﷺ</p>
+          </div>
+        </div>
+        <div class="wish-card">
+          <div class="wish-accent"></div>
+          <div>
+            <p class="wish-quote">"كل يوم يزيد حبكما، وبيتكما مليء بالضحك والسرور"</p>
+            <p class="wish-source">— من القلب</p>
+          </div>
+        </div>
+        <div class="wish-card">
+          <div class="wish-accent"></div>
+          <div>
+            <p class="wish-quote">"أسعد الله قلبيكما وجعل زواجكما مباركاً على مدى العمر"</p>
+            <p class="wish-source">— أهل وأحباء</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ FOOTER ════════ -->
   <footer>
-    <div class="footer-monogram reveal"><span> أ &amp; ب </span></div>
+    <div class="footer-ring reveal">
+      <span class="footer-ring-icon">أ · ب</span>
+    </div>
     <p class="footer-names reveal">أحمد ❤️ بسنت</p>
-    <p class="footer-hearts reveal">♥ ♥ ♥</p>
+    <div class="footer-hearts reveal">♥ ♥ ♥</div>
     <p class="footer-dua reveal">بارك الله لهما وبارك عليهما وجمع بينهما في خير</p>
     <p class="footer-date reveal">٢٠ · ٠٦ · ٢٠٢٦</p>
   </footer>
 
   <script>
-    /* ── FIXED FIREWORKS SYSTEM (Glitch-Free) ── */
-    class Firework {
-      constructor(x, targetY, color) {
-        this.x = x;
-        this.y = window.innerHeight;
-        this.targetY = targetY;
-        this.speed = 10 + Math.random() * 3;
-        
-        // ✅ FIX #1: Proper vertical launch with tiny horizontal drift
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = -Math.abs(this.speed);
-        
-        this.color = color;
-        this.exploded = false;
-        this.particles = [];
-        this.gravity = 0.04;
-      }
+    /* ═══════════════════════════════
+       FLOATING PARTICLE FIELD
+    ═══════════════════════════════ */
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
 
-      update() {
-        if (!this.exploded) {
-          this.x += this.vx;
-          this.y += this.vy;
-          this.vy += this.gravity;
-          
-          if (this.y <= this.targetY || this.vy >= 0) {
-            this.explode();
-          }
-        } else {
-          // ✅ FIX #3: Clean up particles when nearly invisible
-          for (let i = this.particles.length - 1; i >= 0; i--) {
-            this.particles[i].update();
-            if (this.particles[i].alpha <= 0.02) {
-              this.particles.splice(i, 1);
-            }
-          }
-        }
-      }
+    let W, H, particles = [];
 
-      explode() {
-        this.exploded = true;
-        const count = 60;
-        const colors = ['#d4a93a', '#f2d4db', '#c8ddd3', '#ffffff'];
-
-        for (let i = 0; i < count; i++) {
-          const angle = (Math.PI * 2 / count) * i;
-          const speed = 2 + Math.random() * 3;
-          this.particles.push(new Particle(
-            this.x, this.y, angle, speed, 2,
-            colors[Math.floor(Math.random() * colors.length)]
-          ));
-        }
-      }
-
-      draw(ctx) {
-        if (!this.exploded) {
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
-          ctx.fillStyle = this.color;
-          ctx.fill();
-        } else {
-          this.particles.forEach(p => p.draw(ctx));
-        }
-      }
-
-      isDone() {
-        return this.exploded && this.particles.length === 0;
-      }
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
     }
+    resize();
+    window.addEventListener('resize', () => { resize(); initParticles(); });
 
     class Particle {
-      constructor(x, y, angle, speed, size, color) {
-        this.x = x; this.y = y;
-        this.vx = Math.cos(angle) * speed;
-        this.vy = Math.sin(angle) * speed;
-        this.size = size;
-        this.color = color;
-        this.alpha = 1;
-        this.decay = 0.02;
-        this.gravity = 0.03;
-        this.friction = 0.98;
+      constructor() { this.reset(true); }
+
+      reset(initial) {
+        this.x = Math.random() * W;
+        this.y = initial ? Math.random() * H : H + 20;
+        this.size = 0.8 + Math.random() * 1.2;
+        this.speedY = 0.15 + Math.random() * 0.3;
+        this.speedX = (Math.random() - 0.5) * 0.2;
+        this.opacity = 0;
+        this.maxOpacity = 0.15 + Math.random() * 0.25;
+        this.life = 0;
+        this.maxLife = 200 + Math.random() * 300;
+        // gold or rose tint
+        this.hue = Math.random() > 0.5 ? 42 : 345;
       }
 
       update() {
-        this.vx *= this.friction;
-        this.vy *= this.friction;
-        this.vy += this.gravity;
-        this.x += this.vx;
-        this.y += this.vy;
-        this.alpha -= this.decay;
+        this.life++;
+        this.x += this.speedX;
+        this.y -= this.speedY;
+
+        // Fade in/out
+        if (this.life < 60) this.opacity = (this.life / 60) * this.maxOpacity;
+        else if (this.life > this.maxLife - 60) this.opacity = ((this.maxLife - this.life) / 60) * this.maxOpacity;
+        else this.opacity = this.maxOpacity;
+
+        if (this.life >= this.maxLife) this.reset(false);
+        if (this.y < -20) this.reset(false);
       }
 
-      draw(ctx) {
-        if (this.alpha <= 0.02) return;
-        // ✅ FIX #2: Save/restore context to prevent alpha leak
+      draw() {
         ctx.save();
-        ctx.globalAlpha = this.alpha;
-        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = `hsl(${this.hue}, 55%, 65%)`;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -872,306 +794,99 @@
       }
     }
 
-    class FireworksSystem {
-      constructor(canvas) {
-        this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
-        this.fireworks = [];
-        this.lastLaunch = 0;
-        this.launchInterval = 700;
-        this.maxFireworks = 2;
-        this.running = true;
-      }
-
-      resize() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-      }
-
-      launch(x, y) {
-        const colors = ['#d4a93a', '#f2d4db', '#c8ddd3', '#ffffff'];
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        this.fireworks.push(new Firework(x, y, color));
-      }
-
-      launchRandom() {
-        const x = Math.random() * this.canvas.width * 0.8 + this.canvas.width * 0.1;
-        const y = Math.random() * this.canvas.height * 0.4 + this.canvas.height * 0.15;
-        this.launch(x, y);
-      }
-
-      update() {
-        const now = Date.now();
-        // 🔥 Loop control: auto-launch fireworks
-        if (now - this.lastLaunch > this.launchInterval && 
-            this.fireworks.length < this.maxFireworks) {
-          this.launchRandom();
-          this.lastLaunch = now;
-        }
-        for (let i = this.fireworks.length - 1; i >= 0; i--) {
-          this.fireworks[i].update();
-          if (this.fireworks[i].isDone()) {
-            this.fireworks.splice(i, 1);
-          }
-        }
-      }
-
-      draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.globalCompositeOperation = 'lighter';
-        this.fireworks.forEach(fw => fw.draw(this.ctx));
-        // ✅ FIX #4: Reset composite operation
-        this.ctx.globalCompositeOperation = 'source-over';
-      }
-
-      animate() {
-        if (!this.running) return;
-        this.update();
-        this.draw();
-        requestAnimationFrame(() => this.animate());
-      }
-
-      start() {
-        // ✅ FIX #5: Removed unused duration parameter
-        this.running = true;
-        this.resize();
-        this.canvas.classList.add('active');
-        this.animate();
-        // Initial burst
-        for (let i = 0; i < 4; i++) {
-          setTimeout(() => this.launchRandom(), i * 250);
-        }
-      }
-
-      stop() {
-        this.running = false;
-        this.canvas.classList.remove('active');
-        this.fireworks = [];
-      }
+    function initParticles() {
+      particles = [];
+      const count = Math.min(120, Math.floor((W * H) / 12000));
+      for (let i = 0; i < count; i++) particles.push(new Particle());
     }
+    initParticles();
 
-    /* ── SLOWER CUSTOM SCROLL ── */
-    let scrollTarget = null, scrollStart = 0, scrollStartTime = 0;
-    const scrollDuration = 1800;
-
-    function easeInOutQuad(t) {
-      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    function animateParticles() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
     }
+    animateParticles();
 
-    function customScroll(targetY) {
-      if (scrollTarget !== null) return;
-      scrollTarget = targetY;
-      scrollStart = window.scrollY;
-      scrollStartTime = performance.now();
-      
-      function scrollStep(timestamp) {
-        const elapsed = timestamp - scrollStartTime;
-        const progress = Math.min(elapsed / scrollDuration, 1);
-        const eased = easeInOutQuad(progress);
-        window.scrollTo(0, scrollStart + (scrollTarget - scrollStart) * eased);
-        if (progress < 1) requestAnimationFrame(scrollStep);
-        else scrollTarget = null;
-      }
-      requestAnimationFrame(scrollStep);
+    /* ═══════════════════════════════
+       CURSOR MAGNETIC GLOW
+    ═══════════════════════════════ */
+    const glow = document.getElementById('cursor-glow');
+    let mx = W/2, my = H/2, cx = W/2, cy = H/2;
+
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+    function animateGlow() {
+      cx += (mx - cx) * 0.07;
+      cy += (my - cy) * 0.07;
+      glow.style.left = cx + 'px';
+      glow.style.top = cy + 'px';
+      requestAnimationFrame(animateGlow);
     }
+    animateGlow();
 
-    document.addEventListener('click', (e) => {
-      const anchor = e.target.closest('a[href^="#"]');
-      if (anchor) {
-        e.preventDefault();
-        const targetId = anchor.getAttribute('href');
-        if (targetId === '#') return;
-        const targetEl = document.querySelector(targetId);
-        if (targetEl) {
-          const targetY = targetEl.getBoundingClientRect().top + window.scrollY - 20;
-          customScroll(targetY);
-        }
-      }
+    /* ═══════════════════════════════
+       CLICK RIPPLE
+    ═══════════════════════════════ */
+    document.addEventListener('click', e => {
+      const ripple = document.createElement('div');
+      ripple.style.cssText = `
+        position:fixed;
+        left:${e.clientX}px;
+        top:${e.clientY}px;
+        width:6px;height:6px;
+        border-radius:50%;
+        border:1px solid rgba(201,168,76,0.6);
+        pointer-events:none;
+        z-index:9999;
+        transform:translate(-50%,-50%) scale(1);
+        transition:transform 0.6s cubic-bezier(.16,1,.3,1), opacity 0.6s ease;
+      `;
+      document.body.appendChild(ripple);
+      requestAnimationFrame(() => {
+        ripple.style.transform = 'translate(-50%,-50%) scale(20)';
+        ripple.style.opacity = '0';
+      });
+      setTimeout(() => ripple.remove(), 700);
     });
 
-    const heroScroll = document.querySelector('.hero-scroll');
-    if (heroScroll) {
-      heroScroll.addEventListener('click', (e) => {
-        e.preventDefault();
-        const nextSection = document.querySelector('.quran-section');
-        if (nextSection) {
-          const targetY = nextSection.getBoundingClientRect().top + window.scrollY - 20;
-          customScroll(targetY);
-        }
-      });
-    }
-
-    /* ── PETALS ── */
-    const hero = document.querySelector('.hero');
-    for (let i = 0; i < 14; i++) {
-      const p = document.createElement('div');
-      p.className = 'petal';
-      p.style.left = Math.random() * 100 + 'vw';
-      p.style.animationDuration = (12 + Math.random() * 14) + 's';
-      p.style.animationDelay = Math.random() * 12 + 's';
-      p.style.width = (5 + Math.random() * 7) + 'px';
-      p.style.height = (10 + Math.random() * 12) + 'px';
-      p.style.opacity = 0.3 + Math.random() * 0.4;
-      hero.appendChild(p);
-    }
-
-    /* ── COUNTDOWN ── */
+    /* ═══════════════════════════════
+       COUNTDOWN
+    ═══════════════════════════════ */
     function updateCountdown() {
       const target = new Date('2026-06-20T18:00:00');
       const diff = target - Date.now();
-      if (diff < 0) {
+      if (diff <= 0) {
         document.getElementById('countdown').innerHTML =
-          '<p style="font-family:Amiri,serif;font-size:2rem;color:var(--gold);letter-spacing:0.1em">مبروك! 🎉</p>';
+          `<p style="font-family:'Amiri',serif;font-size:2rem;color:var(--gold);letter-spacing:.1em;text-align:center">مبروك 🎉</p>`;
         return;
       }
       const d = Math.floor(diff / 86400000);
       const h = Math.floor((diff % 86400000) / 3600000);
       const m = Math.floor((diff % 3600000) / 60000);
       const s = Math.floor((diff % 60000) / 1000);
-      [['days', d], ['hours', h], ['mins', m], ['secs', s]].forEach(([id, val]) => {
-        document.getElementById(id).textContent = String(val).padStart(2, '0');
+      [['days',d],['hours',h],['mins',m],['secs',s]].forEach(([id, val]) => {
+        document.getElementById(id).textContent = String(val).padStart(2,'0');
       });
     }
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
-    /* ── SCROLL REVEAL ── */
-    const reveals = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver((entries) => {
+    /* ═══════════════════════════════
+       SCROLL REVEAL
+    ═══════════════════════════════ */
+    const io = new IntersectionObserver(entries => {
       entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          io.unobserve(e.target);
-        }
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
       });
-    }, { threshold: 0.12 });
-    reveals.forEach(el => io.observe(el));
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-    /* ── SPOTLIGHT ── */
-    const canvas = document.getElementById('spotlight');
-    const ctx = canvas.getContext('2d');
-    let targetX = window.innerWidth / 2, targetY = window.innerHeight / 2;
-    let currentX = targetX, currentY = targetY;
-    let isHero = true;
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    document.addEventListener('mousemove', (e) => {
-      targetX = e.clientX;
-      targetY = e.clientY;
-      const heroRect = document.querySelector('.hero').getBoundingClientRect();
-      isHero = (e.clientY >= heroRect.top && e.clientY <= heroRect.bottom);
-    });
-
-    function lerp(a, b, t) { return a + (b - a) * t; }
-    const spotColors = ['rgba(212,169,58,0.13)', 'rgba(212,120,138,0.09)', 'rgba(255,252,247,0.06)'];
-
-    function drawSpotlight() {
-      currentX = lerp(currentX, targetX, 0.08);
-      currentY = lerp(currentY, targetY, 0.08);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (isHero) {
-        const radii = [320, 180, 80];
-        radii.forEach((r, i) => {
-          const grad = ctx.createRadialGradient(currentX, currentY, 0, currentX, currentY, r);
-          grad.addColorStop(0, spotColors[2 - i]);
-          grad.addColorStop(1, 'transparent');
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-        });
-        const core = ctx.createRadialGradient(currentX, currentY, 0, currentX, currentY, 28);
-        core.addColorStop(0, 'rgba(255,240,190,0.22)');
-        core.addColorStop(1, 'transparent');
-        ctx.fillStyle = core;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-      requestAnimationFrame(drawSpotlight);
-    }
-    drawSpotlight();
-
-    /* ── SPARKLES ON CLICK ── */
-    const sparkleColors = ['#d4a93a','#f2d4db','#c8ddd3','#fffcf7','#b8922a'];
-    const starGlyphs = ['✦','✧','❋','✿','❀','✾'];
-
-    function spawnSparkles(x, y) {
-      for (let i = 0; i < 8; i++) {
-        const el = document.createElement('div');
-        el.className = 'sparkle';
-        const size = 4 + Math.random() * 6;
-        const angle = Math.random() * Math.PI * 2;
-        const dist = 20 + Math.random() * 45;
-        el.style.cssText = `
-          left:${x}px; top:${y}px;
-          width:${size}px; height:${size}px;
-          background:${sparkleColors[Math.floor(Math.random()*sparkleColors.length)]};
-          box-shadow: 0 0 ${size*2}px ${sparkleColors[0]};
-          animation-duration: ${0.5 + Math.random() * 0.4}s;
-          animation-delay: ${Math.random() * 0.1}s;
-          translate: ${Math.cos(angle) * dist}px ${Math.sin(angle) * dist}px;
-        `;
-        document.body.appendChild(el);
-        el.addEventListener('animationend', () => el.remove());
-      }
-      for (let i = 0; i < 3; i++) {
-        const el = document.createElement('div');
-        el.className = 'star-burst';
-        const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
-        const dist = 30 + Math.random() * 30;
-        el.textContent = starGlyphs[Math.floor(Math.random() * starGlyphs.length)];
-        el.style.cssText = `
-          left:${x + Math.cos(angle) * dist}px;
-          top:${y + Math.sin(angle) * dist}px;
-          color:${sparkleColors[Math.floor(Math.random()*sparkleColors.length)]};
-          animation-duration: ${0.7 + Math.random() * 0.3}s;
-          text-shadow: 0 0 6px ${sparkleColors[0]};
-        `;
-        document.body.appendChild(el);
-        el.addEventListener('animationend', () => el.remove());
-      }
-    }
-
-    document.addEventListener('click', (e) => {
-      spawnSparkles(e.clientX, e.clientY);
-      const fwCanvas = document.getElementById('fireworks-canvas');
-      if (fwCanvas.classList.contains('active') && window.fireworksSystem) {
-        window.fireworksSystem.launch(e.clientX, e.clientY - 80);
-      }
-    });
-
-    /* ── TRAILING GLOW DOTS ── */
-    let trailTimer = 0;
-    document.addEventListener('mousemove', (e) => {
-      if (!isHero) return;
-      if (Date.now() - trailTimer < 80) return;
-      trailTimer = Date.now();
-      const dot = document.createElement('div');
-      dot.className = 'sparkle';
-      const size = 2 + Math.random() * 3;
-      dot.style.cssText = `
-        left:${e.clientX}px; top:${e.clientY}px;
-        width:${size}px; height:${size}px;
-        background: rgba(212,169,58,0.6);
-        animation-duration: 0.5s;
-      `;
-      document.body.appendChild(dot);
-      dot.addEventListener('animationend', () => dot.remove());
-    });
-
-    /* ── INITIALIZE ── */
-    window.addEventListener('load', () => {
-      const fwCanvas = document.getElementById('fireworks-canvas');
-      window.fireworksSystem = new FireworksSystem(fwCanvas);
-      
-      setTimeout(() => {
-        window.fireworksSystem.start(); // ✅ No duration param
-      }, 1500);
-      
-      window.addEventListener('resize', () => window.fireworksSystem?.resize());
+    /* ═══════════════════════════════
+       SCROLL HINT CLICK
+    ═══════════════════════════════ */
+    document.getElementById('scrollHint')?.addEventListener('click', () => {
+      document.querySelector('.verse-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   </script>
 </body>
